@@ -1,41 +1,48 @@
-#include "ft_printf.h"
+include "ft_printf.h"
 
-// Główna funkcja ft_printf obsługująca wszystkie konwersje
-int ft_printf(const char *format, ...)
+static int  init_data(t_data *data, const char *ftm)
 {
-    va_list args;
-    int i = 0;
-    int count = 0;
+    data->chars_written = 0;
+    data->s = fmt;
+    data->buf = malloc(BUF_SIZE * sizeof(char));
 
-    va_start(args, format);
+    if (NULL == data->buf)
+        return(MALLOC_ERROR);
+    data->buffer_index = 0;
+    my_memset(data->buf, 0, BUF_SIZE * sizeof(char));
 
-    while (format[i])
+    return (OK);
+
+}
+
+int ft_printf(const char *fmt, ...)
+{
+    t_data  data;
+
+    va_start(data.ap, ftm)
+
+    if  init_data(&data, fmt)
+        return (MALLOC_ERROR);
+    while (*data.s)
     {
-        if (format[i] == '%' && format[i + 1])
+        if (*data.s == '%' && *(++data.s))
         {
-            i++;
-            if (format[i] == 'c')
-                ft_print_char(va_arg(args, int));
-            else if (format[i] == 's')
-                ft_print_str(va_arg(args, char *));
-            else if (format[i] == 'p')
-                ft_print_pointer((unsigned long)va_arg(args, void *));
-            else if (format[i] == 'd' || format[i] == 'i')
-                ft_print_int(va_arg(args, int));
-            else if (format[i] == 'u')
-                ft_print_unsigned(va_arg(args, unsigned int));
-            else if (format[i] == 'x')
-                ft_print_hex(va_arg(args, unsigned int), 0);
-            else if (format[i] == 'X')
-                ft_print_hex(va_arg(args, unsigned int), 1);
-            else if (format[i] == '%')
-                ft_print_percent();
-        }
-        else
-            write(1, &format[i], 1);
-        i++;
+            if (parse_format(&data))
+            {
+                free(data.buf);
+                return (PARSE_ERROR);
+            }
+        render_format(&data);
     }
+    else
+    {
+        write_buf(&data, *data.s);
+    }
+    flush_buf(&data);
+    va_ens(data.ap);
+    free(data.buf);
+    return (data.chars_written);
+    
 
-    va_end(args);
-    return count;
+}
 }

@@ -1,48 +1,60 @@
-include "ft_printf.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_printf.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adiaz-be <adiaz-be@student.42malaga.c      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/10/13 15:37:56 by adiaz-be          #+#    #+#             */
+/*   Updated: 2022/10/13 15:40:08 by adiaz-be         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-static int  init_data(t_data *data, const char *ftm)
+#include "ft_printf.h"
+
+void	ft_format(va_list va, char *str, size_t *counter)
 {
-    data->chars_written = 0;
-    data->s = fmt;
-    data->buf = malloc(BUF_SIZE * sizeof(char));
-
-    if (NULL == data->buf)
-        return(MALLOC_ERROR);
-    data->buffer_index = 0;
-    my_memset(data->buf, 0, BUF_SIZE * sizeof(char));
-
-    return (OK);
-
+	if (*str == 'c')
+		ft_putchar_pf(va_arg(va, int), counter);
+	else if (*str == 's')
+		ft_putstr_pf(va_arg(va, char *), counter);
+	else if (*str == 'p')
+		ft_putptr_pf(va_arg(va, void *), counter);
+	else if (*str == 'i' || *str == 'd')
+		ft_putnbr_pf(va_arg(va, int), counter);
+	else if (*str == 'u')
+		ft_putuint_pf(va_arg(va, unsigned int), counter);
+	else if (*str == 'x' || *str == 'X')
+	{
+		if (*str == 'x')
+			ft_puthex_pf(va_arg(va, unsigned int), counter, HEX_LOW_BASE);
+		else
+			ft_puthex_pf(va_arg(va, unsigned int), counter, HEX_UPP_BASE);
+	}
+	else if (*str == '%')
+		ft_putchar_pf(*str, counter);
 }
 
-int ft_printf(const char *fmt, ...)
+int	ft_printf(char const *str, ...)
 {
-    t_data  data;
+	va_list		va;
+	size_t		counter;
 
-    va_start(data.ap, ftm)
-
-    if  init_data(&data, fmt)
-        return (MALLOC_ERROR);
-    while (*data.s)
-    {
-        if (*data.s == '%' && *(++data.s))
-        {
-            if (parse_format(&data))
-            {
-                free(data.buf);
-                return (PARSE_ERROR);
-            }
-        render_format(&data);
-    }
-    else
-    {
-        write_buf(&data, *data.s);
-    }
-    flush_buf(&data);
-    va_ens(data.ap);
-    free(data.buf);
-    return (data.chars_written);
-    
-
-}
+	if (!str)
+		return (0);
+	counter = 0;
+	va_start(va, str);
+	while (*str)
+	{
+		if (*str == '%')
+		{
+			str++;
+			ft_format(va, (char *)str, &counter);
+		}
+		else
+			ft_putchar_pf(*str, &counter);
+		str++;
+	}
+	va_end(va);
+	return (counter);
 }

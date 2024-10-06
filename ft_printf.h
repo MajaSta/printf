@@ -1,61 +1,35 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_printf.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adiaz-be <adiaz-be@student.42malaga.c      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/10/13 15:41:01 by adiaz-be          #+#    #+#             */
+/*   Updated: 2022/10/13 15:41:05 by adiaz-be         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef FT_PRINTF_H
-#define FT_PRINTF_H
+# define FT_PRINTF_H
+# include <stdarg.h>
+# include <stdlib.h>
+# include <unistd.h>
 
-#include <stdarg.h>
-#include <stdbool.h>
-#include <stdlib.h>
-#include <unistd.h>
+# define HEX_UPP_BASE "0123456789ABCDEF"
+# define HEX_LOW_BASE "0123456789abcdef"
 
-// Constants
-#define BUF_SIZE 1024
-#define OK 0
-#define MALLOC_ERROR -1
-#define PARSE_ERROR -2
+int		ft_printf(char const *str, ...);
 
-// Data structure for formatting
-typedef struct s_format
-{
-    int width_value;
-    int precision_value;
-    int padding_spaces;
-    bool zero_pad;
-    bool plus;
-    bool space;
-    bool hash;
-    bool left_justified;
-    bool signed_value;
-    bool is_negative;
-    char specifier;
-    int base;
-    bool upper_case;
-} t_format;
+/* format functions */
+void	ft_putchar_pf(char c, size_t *counter);
+void	ft_putstr_pf(char *str, size_t *counter);
+void	ft_putnbr_pf(int num, size_t *counter);
+void	ft_putuint_pf(unsigned int num, size_t *counter);
+void	ft_puthex_pf(unsigned int num, size_t *counter, char *base);
+void	ft_putptr_pf(void *ptr, size_t *counter);
 
-// Data structure to hold all the information
-typedef struct s_data
-{
-    int chars_written;
-    char *buf;
-    int buffer_index;
-    va_list ap;
-    const char *s;
-    t_format format;
-} t_data;
+/* auxiliary functions */
+char	*ft_aux_pf(unsigned long long n, char *base);
 
-// Function prototypes
-bool in(const char *s, char c);
-static void parse_flags(t_data *data);
-static int my_atoi(t_data *data);
-static void get_value(t_data *data, int *value);
-void print_char(t_data *data, int c);
-void my_memset(void *ptr, int value, size_t n);
-int parse_format(t_data *data);
-static void set_str_padding_spaces(t_data *data, char *s);
-void print_str(t_data *data, char *s);
-void write_buf(t_data *data, char c);
-void putchar_buf_n(char c, int precision, t_data *data);
-void flush_buf(t_data *data);
-void render_format(t_data *data);
-static int init_data(t_data *data, const char *fmt);
-int ft_printf(const char *fmt, ...);
-
-#endif // FT_PRINTF_H
+#endif

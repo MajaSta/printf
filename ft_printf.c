@@ -48,13 +48,24 @@ int	ft_printf(char const *str, ...)
 	{
 		if (*str == '%')
 		{
-			str++;
-			ft_format(va, (char *)str, &counter);
+			str++;  // Przechodzimy do kolejnego znaku po '%'
+			if (*str)  // Upewniamy się, że znak po '%' istnieje
+			{
+				ft_format(va, (char *)str, &counter);  // Wywołanie funkcji formatowania
+			}
+			else
+			{
+				// Jeśli po '%' nie ma kolejnego znaku, przerywamy, bo to błąd formatu
+				break;
+			}
 		}
 		else
-			ft_putchar_pf(*str, &counter);
-		str++;
+		{
+			ft_putchar_pf(*str, &counter);  // Zwykły znak, który nie jest formatem
+		}
+		str++;  // Przejście do następnego znaku
 	}
 	va_end(va);
-	return (counter);
+	return (counter);  // Zwracamy licznik znaków
 }
+

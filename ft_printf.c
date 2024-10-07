@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_printf.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: adiaz-be <adiaz-be@student.42malaga.c      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/13 15:37:56 by adiaz-be          #+#    #+#             */
-/*   Updated: 2022/10/13 15:40:08 by adiaz-be         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "ft_printf.h"
 
 void	ft_format(va_list va, char *str, size_t *counter)
@@ -48,24 +36,22 @@ int	ft_printf(char const *str, ...)
 	{
 		if (*str == '%')
 		{
-			str++;  // Przechodzimy do kolejnego znaku po '%'
-			if (*str)  // Upewniamy się, że znak po '%' istnieje
+			str++;
+			if (*str)
 			{
-				ft_format(va, (char *)str, &counter);  // Wywołanie funkcji formatowania
+				ft_format(va, (char *)str, &counter);
 			}
 			else
 			{
-				// Jeśli po '%' nie ma kolejnego znaku, przerywamy, bo to błąd formatu
 				break;
 			}
 		}
 		else
 		{
-			ft_putchar_pf(*str, &counter);  // Zwykły znak, który nie jest formatem
+			ft_putchar_pf(*str, &counter);
 		}
-		str++;  // Przejście do następnego znaku
+		str++;
 	}
 	va_end(va);
-	return (counter);  // Zwracamy licznik znaków
-}
+	return (counter);
 

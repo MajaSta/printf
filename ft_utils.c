@@ -25,17 +25,16 @@ void	ft_putptr_pf(void *ptr, size_t *counter)
 	char			*str;
 	unsigned long	ptr_address;
 
-	// Sprawdzenie, czy wskaźnik to NULL
 	if (ptr == NULL)
 	{
-		ft_putstr_pf("0x0", counter);  // Poprawna reprezentacja NULL dla %p
+		ft_putstr_pf("0x0", counter);
 		return;
 	}
 	ptr_address = (unsigned long)ptr;
-	ft_putstr_pf("0x", counter);  // Zaczynamy od "0x"
-	str = ft_aux_pf(ptr_address, HEX_LOW_BASE);  // Konwertujemy na system szesnastkowy
-	ft_putstr_pf(str, counter);  // Wyświetlamy
-	free(str);  // Zwolnienie pamięci
+	ft_putstr_pf("0x", counter);
+	str = ft_aux_pf(ptr_address, HEX_LOW_BASE);
+	ft_putstr_pf(str, counter);
+	free(str);
 }
 
 

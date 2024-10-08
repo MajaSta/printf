@@ -1,4 +1,28 @@
-ft_hexadecimal(unsigned int x, int *length, char x_or_x)
+void	ft_pointer(unsigned long long pointer, int *length)
+{
+	char	string[25];
+	int		i;
+	char	*base_character;
+
+	base_character = "0123456789abcdef";
+	i = 0;
+	if (!pointer)
+	{
+		*length += write(1, "(nil)", 5);
+		return ;
+	}
+	write(1, "0x", 2);
+	(*length) += 2;
+	while (pointer != 0)
+	{
+		string[i++] = base_character[pointer % 16];
+		pointer = pointer / 16;
+	}
+	while (i--)
+	{
+		ft_putcharacter_length(string[i], length);
+	}
+}ft_hexadecimal(unsigned int x, int *length, char x_or_x)
 {
 	char	string[25];
 	char	*base_character;

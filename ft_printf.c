@@ -1,57 +1,61 @@
-#include "ft_printf.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_printf.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: wmiszkie <wmiszkie@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/27 13:59:10 by wmiszkie          #+#    #+#             */
+/*   Updated: 2024/04/22 15:23:34 by wmiszkie         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+#include "../includes/ft_printf.h"
 
-void	ft_format(va_list va, char *str, size_t *counter)
+static void	ft_printf_checker(char s, va_list *args, int *len, int *i)
 {
-	if (*str == 'c')
-		ft_putchar_pf(va_arg(va, int), counter);
-	else if (*str == 's')
-		ft_putstr_pf(va_arg(va, char *), counter);
-	else if (*str == 'p')
-		ft_putptr_pf(va_arg(va, void *), counter);
-	else if (*str == 'i' || *str == 'd')
-		ft_putnbr_pf(va_arg(va, int), counter);
-	else if (*str == 'u')
-		ft_putuint_pf(va_arg(va, unsigned int), counter);
-	else if (*str == 'x' || *str == 'X')
-	{
-		if (*str == 'x')
-			ft_puthex_pf(va_arg(va, unsigned int), counter, HEX_LOW_BASE);
-		else
-			ft_puthex_pf(va_arg(va, unsigned int), counter, HEX_UPP_BASE);
-	}
-	else if (*str == '%')
-		ft_putchar_pf(*str, counter);
+	if (s == 's')
+		ft_string(va_arg(*args, char *), len);
+	else if (s == 'd' || s == 'i')
+		ft_number(va_arg(*args, int), len);
+	else if (s == 'u')
+		ft_unsigned_int(va_arg(*args, unsigned int), len);
+	else if (s == 'x')
+		ft_hexadecimal(va_arg(*args, unsigned int), len, 'x');
+	else if (s == 'X')
+		ft_hexadecimal(va_arg(*args, unsigned int), len, 'X');
+	else if (s == 'p')
+		ft_pointer(va_arg(*args, size_t), len);
+	else if (s == 'c')
+		ft_putcharacter_length(va_arg(*args, int), len);
+	else if (s == '%')
+		ft_putcharacter_length('%', len);
+	else
+		(*i)--;
 }
 
-int	ft_printf(char const *str, ...)
+int	ft_printf(const char *string, ...)
 {
-	va_list		va;
-	size_t		counter;
+	va_list	args;
+	int		i;
+	int		length;
 
-	if (!str)
-		return (0);
-	counter = 0;
-	va_start(va, str);
-	while (*str)
+	i = 0;
+	length = 0;
+	va_start(args, string);
+	while (string[i] != '\0')
 	{
-		if (*str == '%')
+		if (string[i] == '%')
 		{
-			str++;
-			if (*str)
-			{
-				ft_format(va, (char *)str, &counter);
-			}
-			else
-			{
-				break;
-			}
+			i++;
+			ft_printf_checker(string[i], &args, &length, &i);
+			i++;
 		}
 		else
 		{
-			ft_putchar_pf(*str, &counter);
+			ft_putcharacter_length((char)string[i], &length);
+			i++;
 		}
-		str++;
 	}
-	va_end(va);
-	return (counter);
-
+	va_end(args);
+	return (length);
+}

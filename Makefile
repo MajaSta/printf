@@ -3,37 +3,37 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: adiaz-be <adiaz-be@student.42malaga.c      +#+  +:+       +#+         #
+#    By: wmiszkie <wmiszkie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2022/10/13 15:40:29 by adiaz-be          #+#    #+#              #
-#    Updated: 2022/10/13 15:40:33 by adiaz-be         ###   ########.fr        #
+#    Created: 2024/04/22 12:56:40 by wmiszkie          #+#    #+#              #
+#    Updated: 2024/04/22 15:08:47 by wmiszkie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+NAME	= libftprintf.a
 
-NAME	=	libftprintf.a
+SRCS	= ./sources/ft_printf.c \
+	   	./sources/ft_numbers.c \
+		./sources/ft_words.c \
 
-SRC	=	ft_printf.c	\
-		ft_aux_pf.c	\
-		ft_utils.c
+OBJS	= $(SRCS:.c=.o)
 
-OBJS = $(SRC:.c=.o)
+CC	= gcc
 
-CC = gcc
-CFLAGS = -Wall -Werror -Wextra
-RM = rm -rf
-AR = ar crs
+RM	= rm -f
 
-$(NAME): $(OBJS)
-	$(AR) $(NAME) $(OBJS)
+CFLAGS	= -Wall -Wextra -Werror
 
-all: $(NAME)
+all:	$(NAME)
+
+$(NAME):	$(OBJS)
+			ar rcs $(NAME) $(OBJS)
 
 clean:
-	$(RM) $(OBJS)
+			$(RM) $(OBJS)
 
-fclean:	clean
-	$(RM) $(NAME)		
+fclean:		clean
+			$(RM) $(NAME)
 
-re:	fclean all
+re:			fclean all
 
-.PHONY:	all clean fclean re
+.PHONY:		all clean fclean re
